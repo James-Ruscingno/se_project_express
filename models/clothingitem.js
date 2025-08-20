@@ -9,14 +9,29 @@ const clothingItem = new mongoose.Schema({
    weather: {
     type: String,
     required: true,
+    enum: ["hot", "warm,", "cold"],
    },
-   imageURL: {
+   imageUrl: {
     type: String,
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
       message: "Link is not valid",
     },
+   },
+   owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+   },
+   likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    default: [],
+   }],
+   createdAt: {
+    type: Date,
+    default: Date.now,
    },
 });
 

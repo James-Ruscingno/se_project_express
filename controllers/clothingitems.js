@@ -1,16 +1,17 @@
 const ClothingItem = require("../models/clothingitem");
 
 const createItem = (req, res) => {
-  console.log(reg)
+  console.log(req)
   console.log(req.body)
 
-  cost {name, weather, imageURL} = req.body;
+  const {name, weather, imageURL} = req.body;
 
-  ClothingItem.create({name, weather, imageURL}).then((item) => {
+  ClothingItem.create({ name, weather, imageURL }).then((item) => {
      console.log(item);
-     res.send({data.item})
+     res.status(201).send({ data: item })
   }).catch((e) => {
-    res.status(500).send(message: "Error from createItem",e)
+    console.error(e);
+    res.status(500).send({message: "Error from createItem",e})
   })
 };
 
@@ -21,11 +22,16 @@ const getItems = (req, res) => {
    })
 }
 
-const updateItmes = (req, res) => {
+const updateItems = (req, res) => {
   const {itemId} = req.params;
   const {imageURL} = req.body;
 
-  ClothingItem.findByIdAndUpdate(itemId, {$set: {imageURL}}).orFail().then((item) => res.status(200).send({data:item}))
+  ClothingItem.findByIdAndUpdate(
+    itemId,
+    {$set: {imageURL}},
+    {new: true, runValidators: true}
+  )
+  .orFail().then((item) => res.status(200).send({data:item}))
   .catch((e) => {
     res.status(500).send({message: "Error from updateItems", e})
   })
@@ -41,4 +47,4 @@ const deleteItem = (req, res) => {
   })
 }
 
-module.exports = {createItem, getItems, updateItmes, deleteItem}
+module.exports = {createItem, getItems, updateItems, deleteItem}
