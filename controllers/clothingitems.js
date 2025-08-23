@@ -11,18 +11,18 @@ const createItem = (req, res) => {
      res.status(201).send({ data: item })
   }).catch((e) => {
     console.error(e);
-    res.status(500).send({message: "Error from createItem",e})
+    res.status(500).send({message: "Error from createItem"})
   })
 };
 
 const getItems = (req, res) => {
    ClothingItem.find({}).then((items) => res.status(200).send(items))
    .catch((e) => {
-    res.status(500).send({message: "Error from getItems", e})
+    res.status(500).send({message: "Error from getItems"})
    })
 }
 
-const updateItems = (req, res) => {
+const updateItem = (req, res) => {
   const {itemId} = req.params;
   const {imageURL} = req.body;
 
@@ -33,7 +33,7 @@ const updateItems = (req, res) => {
   )
   .orFail().then((item) => res.status(200).send({data:item}))
   .catch((e) => {
-    res.status(500).send({message: "Error from updateItems", e})
+    res.status(500).send({message: "Error from updateItems"})
   })
 }
 
@@ -43,8 +43,8 @@ const deleteItem = (req, res) => {
   console.log(itemId);
   ClothingItem.findByIdAndDelete(itemId).orFail().then((item) => res.status(204).send({}))
   .catch((e) => {
-    res.status(500).send({message: "Error from deleteItem", e})
+    res.status(500).send({message: "Error from deleteItem"})
   })
 }
 
-module.exports = {createItem, getItems, updateItems, deleteItem}
+module.exports = {createItem, getItems, updateItem, deleteItem}
