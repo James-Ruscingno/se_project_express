@@ -8,12 +8,12 @@ const {
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
-  const { name, weather, imageURL } = req.body;
+  const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({
     name,
     weather,
-    imageURL,
+    imageUrl,
     owner: req.user._id,
   })
     .then((item) => res.status(STATUS_CREATED).send({ data: item }))
@@ -84,6 +84,14 @@ const likeItem = (req, res) => {
     .then((item) => res.status(STATUS_OK).send({ data: item }))
     .catch((err) => {
       console.error(err);
+      if (err.name === "CastError") {
+        return res
+          .status(STATUS_BAD_REQUEST)
+          .send({ message: "Invalid item ID format" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(STATUS_NOT_FOUND).send({ message: "Item not found" });
+      }
       return res
         .status(STATUS_INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
@@ -105,6 +113,14 @@ const unlikeItem = (req, res) => {
     .then((item) => res.status(STATUS_OK).send({ data: item }))
     .catch((err) => {
       console.error(err);
+      if (err.name === "CastError") {
+        return res
+          .status(STATUS_BAD_REQUEST)
+          .send({ message: "Invalid item ID format" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(STATUS_NOT_FOUND).send({ message: "Item not found" });
+      }
       return res
         .status(STATUS_INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
